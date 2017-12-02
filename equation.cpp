@@ -1,6 +1,4 @@
 #include "equation.hpp"
-#include <cmath>
-#include <iostream>
 
 Equation::Equation(vector exp, vector coeff): 
     exponents(exp), coefficients(coeff) {}
@@ -23,28 +21,39 @@ double Equation::fx(double x)
     return result;
 }
 
-void Equation::PrintEquation()
+std::ostream& operator<<(std::ostream& out, const Equation& eq)
 {
-    for (int i = 0; i < coefficients.size(); i++)
+    for (int i = 0; i < eq.coefficients.size(); i++)
     {
-        if (coefficients.at(i) == 0) continue;
+        if (eq.coefficients.at(i) == 0) continue;
 
-        else if (exponents.at(i) == 0)
+        else if (eq.exponents.at(i) == 0)
         {
-            std::cout << coefficients.at(i);
+            out << eq.coefficients.at(i);
             continue;
         }
 
-        else if (coefficients.at(i) > 1 || coefficients.at(i) < -1)
+        else if (eq.coefficients.at(i) > 1 || eq.coefficients.at(i) < -1)
         {
-            std::cout << coefficients.at(i);
+            out << eq.coefficients.at(i);
         }
 
-        else if (coefficients.at(i) == -1)
+        else if (eq.coefficients.at(i) == -1)
         {
-            std::cout << "-";
+            out << "-";
         }
 
-        std::cout << "x^" << exponents.at(i) << " ";
+        out << "x^" << eq.exponents.at(i) << " ";
     }
+}
+
+std::istream& operator>>(std::istream& in, Equation& eq)
+{
+    double n;
+    while (in >> n) { eq.exponents.push_back(n); }
+    in.clear();
+    in.ignore(256, '\n');
+    while (in >> n) { eq.coefficients.push_back(n); }
+    in.clear();
+    in.ignore(256, '\n');
 }
