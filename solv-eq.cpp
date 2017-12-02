@@ -194,32 +194,6 @@ void print_equation(const equation& eq)
 {
     std::cout << "Ecuación ingresada: ";
 
-    for (int i = 0; i < eq.coefficients.size(); i++)
-    {
-        if (eq.coefficients.at(i) == 0)
-        {
-            continue;
-        }
-
-        else if (eq.exponents.at(i) == 0)
-        {
-            std::cout << eq.coefficients.at(i);
-            continue;
-        }
-
-        else if (eq.coefficients.at(i) > 1 || eq.coefficients.at(i) < -1)
-        {
-            std::cout << eq.coefficients.at(i);
-        }
-
-        else if (eq.coefficients.at(i) == -1)
-        {
-            std::cout << "-";
-        }
-
-        std::cout << "x^" << eq.exponents.at(i) << " ";
-    }
-
     std::cout << std::endl;
 }
 

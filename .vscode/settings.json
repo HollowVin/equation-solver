@@ -24,6 +24,7 @@
         "cmath": "cpp",
         "sstream": "cpp",
         "utility": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "array": "cpp"
     }
 }
