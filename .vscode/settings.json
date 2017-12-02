@@ -23,6 +23,7 @@
         "typeinfo": "cpp",
         "cmath": "cpp",
         "sstream": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "tuple": "cpp"
     }
 }

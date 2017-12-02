@@ -2,35 +2,16 @@
 #include <cmath>
 #include "solv-eq.hpp"
 
-struct equation
-{
-    vector coefficients, exponents;
-};
-
-struct eq_evaluation
-{
-    equation& eq;
-    double start, end;
-    int n_intervals, signif_figs;
-    eq_evaluation(equation& eq) : eq(eq) {}
-};
-
 int main()
 {
     equation eq;
     eq_evaluation eval(eq);
 
     read_variables(eval);
-    pair_vector answers = find_bisection_answers(eval);
+    pair_vector answers = find_answers(eval);
     print_results(answers, eval);
 
     return 0;
-}
-
-template<typename T>
-void read_var(std::istream& cin, T& var)
-{
-    cin >> var;
 }
 
 template<typename T>
@@ -50,7 +31,7 @@ void read_variables(eq_evaluation& eval)
     for (int i = 0; i < n_terms; i++)
     {
         double e;
-        read_var(std::cin, e);
+        std::cin >> e;
         eval.eq.exponents.push_back(e);
     }
     std::cin.ignore(256, '\n');
@@ -65,15 +46,33 @@ void read_variables(eq_evaluation& eval)
     std::cin.ignore(256, '\n');
 
     std::cout << "Intervalo: ";
-    read_var(std::cin, eval.start);
-    read_var(std::cin, eval.end);
+    std::cin >> eval.start;
+    std::cin >> eval.end;
     std::cin.ignore(256, '\n');
+
     std::cout << "Subdiv. y cifras signif.: ";
-    read_var(std::cin, eval.n_intervals);
-    read_var(std::cin, eval.signif_figs);
+    std::cin >> eval.n_intervals;
+    std::cin >> eval.signif_figs;
+    std::cin.ignore(256, '\n');
+
+    ask_possible_methods();
+    int m;
+    std::cin >> m;
+    eval.use_method = static_cast<method>(m);
 }
 
-pair_vector find_bisection_answers(const eq_evaluation& eval)
+void ask_possible_methods()
+{
+    std::cout << std::endl << std::endl;
+
+    for (auto i = method_descriptions.begin(); i != method_descriptions.end(); ++i)
+    {
+        int index = static_cast<int> (i->first);
+        std::cout << index << ". " << i->second << std::endl;
+    }
+}
+
+pair_vector find_answers(const eq_evaluation& eval)
 {
     pair_vector answers;
     double step = calc_step(eval);
