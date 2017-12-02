@@ -8,13 +8,12 @@ class Equation
     private:
         vector exponents;
         vector coefficients;
+        int terms;
     public:
         Equation(vector, vector);
         vector GetExponents();
         vector GetCoefficients();
-        void SetExponents(vector);
-        void SetCoefficients(vector);
-        double fx (double);
+        double f(double);
         void PrintEquation();
         friend std::ostream& operator<<(std::ostream&, const Equation&);
         friend std::istream& operator>>(std::istream&, Equation&);

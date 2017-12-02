@@ -1,19 +1,21 @@
 #include "equation.hpp"
 
 Equation::Equation(vector exp, vector coeff): 
-    exponents(exp), coefficients(coeff) {}
+    exponents(exp), coefficients(coeff) 
+{
+    int expSize = exp.size();
+    int coeffSize = coeff.size();
+    terms = expSize < coeffSize ? expSize : coeffSize;
+}
 
 vector Equation::GetExponents() { return exponents; }
 vector Equation::GetCoefficients() { return coefficients; }
 
-void Equation::SetExponents(vector exps) { exponents = exps; }
-void Equation::SetCoefficients(vector coeffs) { coefficients = coeffs; }
-
-double Equation::fx(double x)
+double Equation::f(double x)
 {
     double result = 0;
     
-    for (int i = 0; i < coefficients.size(); i++)
+    for (int i = 0; i < terms; i++)
     {
         result += std::pow(x, exponents.at(i)) * coefficients.at(i);
     }
@@ -23,37 +25,59 @@ double Equation::fx(double x)
 
 std::ostream& operator<<(std::ostream& out, const Equation& eq)
 {
-    for (int i = 0; i < eq.coefficients.size(); i++)
+    for (int i = 0; i < eq.terms; i++)
     {
-        if (eq.coefficients.at(i) == 0) continue;
+        double coefficient = eq.coefficients.at(i);
+        double exponent = eq.exponents.at(i);
+        
+        if (coefficient == 0) { continue; }
 
-        else if (eq.exponents.at(i) == 0)
+        else if (exponent == 0)
         {
-            out << eq.coefficients.at(i);
+            out << coefficient;
             continue;
         }
 
-        else if (eq.coefficients.at(i) > 1 || eq.coefficients.at(i) < -1)
+        else if (coefficient > 1 || coefficient < -1)
         {
-            out << eq.coefficients.at(i);
+            out << coefficient;
         }
 
-        else if (eq.coefficients.at(i) == -1)
+        else if (coefficient == -1)
         {
             out << "-";
         }
 
-        out << "x^" << eq.exponents.at(i) << " ";
+        out << "x^" << exponent << " ";
     }
+
+    return out;
 }
 
 std::istream& operator>>(std::istream& in, Equation& eq)
 {
+    eq.exponents.clear();
+    eq.coefficients.clear();
+    
     double n;
-    while (in >> n) { eq.exponents.push_back(n); }
+    int size1 = 0;
+    while (in >> n) 
+    { 
+        eq.exponents.push_back(n); 
+        size1++; 
+    }
     in.clear();
     in.ignore(256, '\n');
-    while (in >> n) { eq.coefficients.push_back(n); }
+    
+    int size2 = 0;
+    while (in >> n) 
+    { 
+        eq.coefficients.push_back(n); 
+        size2++; 
+    }
     in.clear();
     in.ignore(256, '\n');
+
+    eq.terms = size1 <= size2 ? size1 : size2;
+    return in;
 }
