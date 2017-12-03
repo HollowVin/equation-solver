@@ -1,7 +1,14 @@
 #pragma once
+#include <vector>
+#include <utility>
 #include <iostream>
 #include <cmath>
-#include "dependencies.hpp"
+
+using vector = std::vector<double>;
+using pair = std::pair<double, double>;
+using pairVector = std::vector<pair>;
+
+enum class Method { bisection = 1, approximation, newton };
 
 class Equation
 {
@@ -10,12 +17,14 @@ class Equation
         vector coefficients;
         int terms;
         
-        pair binary_search_answer(const equation&, double, double, double);
-        vector findInitialSubintervals(double, double, int, pair_vector*);
-        void findByBisection(vector&, double, double, pair_vector*);
-        void findBySuccessiveApprox(vector&, double, double, pair_vector*);
+        vector findInitialSubintervals(double, double, int, pairVector*);
+        void findByBisection(const vector&, double, double, pairVector*);
+        void findBySuccessiveApprox(const vector&, double, double, pairVector*);
+
+        static void swap(double&, double&);
 
     public:
+        Equation();
         Equation(vector, vector);
 
         friend std::ostream& operator<<(std::ostream&, const Equation&);
@@ -25,7 +34,5 @@ class Equation
         vector getCoefficients();
 
         double f(double);
-
-        enum method { bisection, approximation, newton };
-        pair_vector* solve(Equation::method, double, double, int, int);
+        pairVector* solve(Method, double, double, int, int);
 };

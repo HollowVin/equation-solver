@@ -1,5 +1,10 @@
 #include "equation.hpp"
 
+Equation::Equation()
+{
+    terms = 0;
+}
+
 Equation::Equation(vector exp, vector coeff): 
     exponents(exp), coefficients(coeff) 
 {
@@ -61,7 +66,7 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     
     double n;
     int size1 = 0;
-    while (in >> n) 
+    while (in >> n)
     { 
         eq.exponents.push_back(n); 
         size1++; 
@@ -82,38 +87,36 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     return in;
 }
 
-pair_vector* Equation::solve(Equation::method m, double start, double end, int subdiv, int figs)
+pairVector* Equation::solve(Method m, double start, double end, int subdiv, int figs)
 {
-    [](double& start, double& end) 
-    { 
-        if (start > end)
-        {
-            std::cout << "[DEBUG] Lambda Entered" << std::endl;
-            double temp = start;
-            start = end;
-            end = temp;
-        }
-    };
-    
-    pair_vector answers;
+    if (start > end) { swap(start, end); }
+
+    pairVector* answers = new pairVector();
     double step = (end - start) / subdiv;
-    double error = pow(0.5, -figs);
-    vector subintervals = findInitialSubintervals(start, step, subdiv, &answers);
+    double error = 0.5 * pow(10, -figs);
+    vector subintervals = findInitialSubintervals(start, step, subdiv, answers);
     
     switch (m)
     {
-        case Equation::bisection:
-            findByBisection(subintervals, step, error, &answers);
-        case Equation::approximation:
-            findBySuccessiveApprox(subintervals, step, error, &answers);
-        /*case Equation::newton:
+        case Method::bisection:
+            findByBisection(subintervals, step, error, answers);
+        case Method::approximation:
+            findBySuccessiveApprox(subintervals, step, error, answers);
+        /*case Method::newton:
             newtonRaphson();*/
     }
 
-    return &answers;
+    return answers;
 }
 
-vector Equation::findInitialSubintervals(double start, double step, int subdiv, pair_vector* answers)
+void Equation::swap(double& a, double& b)
+{
+    double temp = a;
+    a = b;
+    b = temp;
+}
+
+vector Equation::findInitialSubintervals(double start, double step, int subdiv, pairVector* answers)
 {
     vector subintervals;
     double end = start + step;
@@ -132,7 +135,7 @@ vector Equation::findInitialSubintervals(double start, double step, int subdiv, 
     return subintervals;
 }
 
-void Equation::findByBisection(vector& subintervals, double step, double error, pair_vector* answers)
+void Equation::findByBisection(const vector& subintervals, double step, double error, pairVector* answers)
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -164,7 +167,7 @@ void Equation::findByBisection(vector& subintervals, double step, double error, 
     }
 }
 
-void Equation::findBySuccessiveApprox(vector& subintervals, double step, double error, pair_vector* answers)
+void Equation::findBySuccessiveApprox(const vector& subintervals, double step, double error, pairVector* answers)
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -195,5 +198,4 @@ void Equation::findBySuccessiveApprox(vector& subintervals, double step, double 
             prevError = currentError;
         }
     }
-    
 }

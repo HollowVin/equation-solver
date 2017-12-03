@@ -2,19 +2,24 @@
 #include <map>
 #include <utility>
 #include <string>
+#include "equation.hpp"
 
-template<typename T>
-void read_var(std::istream&, T&, char);
+using enumMap = std::map<Method, std::string>;
+enumMap methodDescriptions = 
+{
+    {Method::bisection, "Bisección"}, 
+    {Method::approximation, "Aproximaciones Sucesivas"}, 
+    {Method::newton, "Newton-Raphson"}
+};
 
-void read_variables(eq_evaluation&);
-void ask_possible_methods();
-pair_vector find_answers(const eq_evaluation&);
-double calc_step(const eq_evaluation&);
-double calc_max_rel_error(int);
-vector find_initial_subintervals(const eq_evaluation&, double, pair_vector&);
-double f_x(const equation&, double);
-pair binary_search_answer(const equation&, double, double, double);
-void print_equation(const equation&);
-void print_results(const pair_vector&, const eq_evaluation&);
-void print_answers(const pair_vector&);
-void print_error_values(double);
+struct EqEvaluation
+{
+    Method method;
+    double start, end;
+    int subdiv, figs;
+};
+
+void readSolveParameters(EqEvaluation&);
+void askPossibleMethods();
+void print_results(const pairVector&, const Equation&, const EqEvaluation&);
+void print_answers(const pairVector& answers);
