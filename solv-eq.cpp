@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <map>
+#include "solv-eq.hpp"
 
 int main()
 {
