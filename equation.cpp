@@ -65,23 +65,26 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     eq.coefficients.clear();
     
     double n;
+    std::string str;
     int size1 = 0;
-    while (in >> n)
+
+    std::getline(in, str);
+    std::istringstream iss(str);    
+    while (iss >> n)
     { 
         eq.exponents.push_back(n); 
         size1++; 
     }
-    in.clear();
-    in.ignore(256, '\n');
+    iss.clear();
     
     int size2 = 0;
-    while (in >> n) 
+    std::getline(in, str);
+    while (iss >> n) 
     { 
         eq.coefficients.push_back(n); 
         size2++; 
     }
-    in.clear();
-    in.ignore(256, '\n');
+    iss.clear();
 
     eq.terms = size1 <= size2 ? size1 : size2;
     return in;

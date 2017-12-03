@@ -3,6 +3,8 @@
 #include <utility>
 #include <iostream>
 #include <cmath>
+#include <string>
+#include <sstream>
 
 using vector = std::vector<double>;
 using pair = std::pair<double, double>;
