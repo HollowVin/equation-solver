@@ -5,7 +5,7 @@
 #include <string>
 
 struct equation;
-enum method { bisection, approximation, newton };
+
 
 using vector = std::vector<double>;
 using pair = std::pair<double, double>;
