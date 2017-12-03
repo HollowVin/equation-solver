@@ -40,7 +40,7 @@ void readSolveParameters(EqEvaluation& eval)
 
 void askPossibleMethods()
 {
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
 
     for (auto i = methodDescriptions.begin(); i != methodDescriptions.end(); ++i)
     {
@@ -52,7 +52,7 @@ void askPossibleMethods()
 void print_results(const pairVector& answers, const Equation& equation, const EqEvaluation& eval)
 {
     double max_rel_error = 0.5 * pow(10, -eval.figs);
-    double step = abs((eval.start - eval.end) / eval.subdiv);
+    double step = std::abs((eval.start - eval.end) / eval.subdiv);
 
     std::cout << std::endl;
     std::cout << "Ecuación ingresada: " << equation << std::endl;

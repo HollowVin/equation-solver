@@ -22,7 +22,7 @@ double Equation::f(double x)
     
     for (int i = 0; i < terms; i++)
     {
-        result += std::pow(x, exponents.at(i)) * coefficients.at(i);
+        result += std::pow(x, exponents[i]) * coefficients[i];
     }
 
     return result;
@@ -35,25 +35,15 @@ std::ostream& operator<<(std::ostream& out, const Equation& eq)
         double coefficient = eq.coefficients.at(i);
         double exponent = eq.exponents.at(i);
         
-        if (coefficient == 0) { continue; }
+        if (coefficient == 0)       { continue; }
+        else if (coefficient < 0)   { out << "- "; }
+        else if (i > 0)             { out << "+ "; }
 
-        else if (exponent == 0)
-        {
-            out << coefficient;
-            continue;
-        }
+        if (exponent == 0 || coefficient > 1 || coefficient < -1) { out << std::abs(coefficient); } 
+        if (exponent != 0) { out << "x"; }
+        if (exponent > 1 || exponent < 0) { out << "^" << exponent; }
 
-        else if (coefficient > 1 || coefficient < -1)
-        {
-            out << coefficient;
-        }
-
-        else if (coefficient == -1)
-        {
-            out << "-";
-        }
-
-        out << "x^" << exponent << " ";
+        out << " ";
     }
 
     return out;
@@ -79,9 +69,10 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     
     int size2 = 0;
     std::getline(in, str);
+    iss.str(str);
     while (iss >> n) 
     { 
-        eq.coefficients.push_back(n); 
+        eq.coefficients.push_back(n);
         size2++; 
     }
     iss.clear();
@@ -96,17 +87,21 @@ pairVector* Equation::solve(Method m, double start, double end, int subdiv, int 
 
     pairVector* answers = new pairVector();
     double step = (end - start) / subdiv;
-    double error = 0.5 * pow(10, -figs);
+    double error = 0.5 * std::pow(10, -figs);
     vector subintervals = findInitialSubintervals(start, step, subdiv, answers);
+    std::cout << "Found " << subintervals.size() << " subintervals" << std::endl;
     
     switch (m)
     {
         case Method::bisection:
             findByBisection(subintervals, step, error, answers);
+            break;
         case Method::approximation:
             findBySuccessiveApprox(subintervals, step, error, answers);
+            break;
         /*case Method::newton:
-            newtonRaphson();*/
+            newtonRaphson();
+            break;*/
     }
 
     return answers;
@@ -145,10 +140,10 @@ void Equation::findByBisection(const vector& subintervals, double step, double e
         double start = subintervals[i];
         double mid = start + step / 2;
         double end = start + step;
-        double currentError = error + 1;
-        double prevGuess = start - 1;
+        double currentError = 0;
+        double prevGuess = 0;
 
-        while (true)
+        for (int j = 0;; j++)
         {
             if (f(mid) == 0) 
             {
@@ -156,11 +151,11 @@ void Equation::findByBisection(const vector& subintervals, double step, double e
                 break;
             }
 
-            currentError = abs((mid - prevGuess) / mid);
+            currentError = std::abs((mid - prevGuess) / mid);
 
-            if (currentError <= error)  { break; }
-            if (f(start) * f(mid) < 0)  { end = mid; }
-            else                        { start = mid; }
+            if (j > 0 && currentError <= error)  { break; }
+            if (f(start) * f(mid) < 0)  { end = mid;}
+            else                        { start = mid;}
 
             prevGuess = mid;
             mid = (start + end) / 2;
@@ -184,13 +179,12 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
             continue;
         }
 
-        for (int i = 0;; i++)
+        for (int j = 0;; j++)
         {
             double x = f(prevGuess) + prevGuess;
-            double currentError = abs((x - prevGuess) / x);
-            
-            if (i > 0 && currentError > prevError) { break; }
+            if (x < start || x > start + step || j > 20) { break; }
 
+            double currentError = std::abs((x - prevGuess) / x);
             if (currentError < error)
             {
                 answers->push_back(pair(x, currentError));
