@@ -26,6 +26,7 @@
         "utility": "cpp",
         "tuple": "cpp",
         "array": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "vector": "cpp"
     }
 }
