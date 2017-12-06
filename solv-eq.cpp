@@ -8,6 +8,7 @@ int main()
     Equation equation;
     EqEvaluation eval;
 
+    std::cout << "Enter the exponents and coefficients: " << std::endl;
     std::cin >> equation;
     readSolveParameters(eval);
 
@@ -26,15 +27,15 @@ void readSolveParameters(EqEvaluation& eval)
     eval.method = static_cast<Method>(method);
     std::cin.ignore(256, '\n');
 
-    std::cout << "Intervalo: ";
+    std::cout << "Interval: ";
     std::cin >> eval.start >> eval.end;
     std::cin.ignore(256, '\n');
 
-    std::cout << "Subdivisiones: ";
+    std::cout << "Subdivisions: ";
     std::cin >> eval.subdiv;
     std::cin.ignore(256, '\n');
 
-    std::cout << "Cifras significativas: ";
+    std::cout << "Significant figures: ";
     std::cin >> eval.figs;
 }
 

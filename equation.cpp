@@ -89,7 +89,6 @@ pairVector* Equation::solve(Method m, double start, double end, int subdiv, int 
     double step = (end - start) / subdiv;
     double error = 0.5 * std::pow(10, -figs);
     vector subintervals = findInitialSubintervals(start, step, subdiv, answers);
-    std::cout << "Found " << subintervals.size() << " subintervals" << std::endl;
     
     switch (m)
     {

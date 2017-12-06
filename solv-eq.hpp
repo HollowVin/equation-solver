@@ -7,8 +7,8 @@
 using enumMap = std::map<Method, std::string>;
 enumMap methodDescriptions = 
 {
-    {Method::bisection, "Bisección"}, 
-    {Method::approximation, "Aproximaciones Sucesivas"}, 
+    {Method::bisection, "Bisection"}, 
+    {Method::approximation, "Successive Approximations"}, 
     {Method::newton, "Newton-Raphson"}
 };
 
