@@ -120,8 +120,8 @@ vector Equation::findInitialSubintervals(double start, double step, int subdiv, 
     
     for (int i = 0; i < subdiv; i++)
     {   
-        if (f(start) * f(end) < 0) { subintervals.push_back(start); std::cout << "Pushed subinterval starting at " << start << std::endl; }
-        else if (f(start) == 0) { answers.push_back(pair(start, 0)); std::cout << "Pushed answer " << start << std::endl; }
+        if (f(start) * f(end) < 0) { subintervals.push_back(start); }
+        else if (f(start) == 0) { answers.push_back(pair(start, 0)); }
 
         start = end;
         end = start + step;
