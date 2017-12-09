@@ -19,9 +19,9 @@ class Equation
         vector coefficients;
         int terms;
         
-        vector findInitialSubintervals(double, double, int, pairVector*);
-        void findByBisection(const vector&, double, double, pairVector*);
-        void findBySuccessiveApprox(const vector&, double, double, pairVector*);
+        vector findInitialSubintervals(double, double, int, pairVector&);
+        void findByBisection(const vector&, double, double, pairVector&);
+        void findBySuccessiveApprox(const vector&, double, double, pairVector&);
 
         static void swap(double&, double&);
 
@@ -36,5 +36,5 @@ class Equation
         vector getCoefficients();
 
         double f(double);
-        pairVector* solve(Method, double, double, int, int);
+        pairVector solve(Method, double, double, int, int);
 };
