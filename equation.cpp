@@ -81,11 +81,11 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     return in;
 }
 
-pairVector* Equation::solve(Method m, double start, double end, int subdiv, int figs)
+pairVector Equation::solve(Method m, double start, double end, int subdiv, int figs)
 {
     if (start > end) { swap(start, end); }
 
-    pairVector* answers = new pairVector();
+    pairVector answers;
     double step = (end - start) / subdiv;
     double error = 0.5 * std::pow(10, -figs);
     vector subintervals = findInitialSubintervals(start, step, subdiv, answers);
@@ -113,26 +113,26 @@ void Equation::swap(double& a, double& b)
     b = temp;
 }
 
-vector Equation::findInitialSubintervals(double start, double step, int subdiv, pairVector* answers)
+vector Equation::findInitialSubintervals(double start, double step, int subdiv, pairVector& answers)
 {
     vector subintervals;
     double end = start + step;
     
     for (int i = 0; i < subdiv; i++)
     {   
-        if (f(start) * f(end) < 0) { subintervals.push_back(start); }
-        else if (f(start) == 0) { answers->push_back(pair(start, 0)); }
+        if (f(start) * f(end) < 0) { subintervals.push_back(start); std::cout << "Pushed subinterval starting at " << start << std::endl; }
+        else if (f(start) == 0) { answers.push_back(pair(start, 0)); std::cout << "Pushed answer " << start << std::endl; }
 
         start = end;
         end = start + step;
     }
 
-    if ((f(end) == 0)) { answers->push_back(pair(end, 0)); }
+    if ((f(end) == 0)) { answers.push_back(pair(end, 0)); }
 
     return subintervals;
 }
 
-void Equation::findByBisection(const vector& subintervals, double step, double error, pairVector* answers)
+void Equation::findByBisection(const vector& subintervals, double step, double error, pairVector& answers)
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -160,11 +160,11 @@ void Equation::findByBisection(const vector& subintervals, double step, double e
             mid = (start + end) / 2;
         }
 
-        answers->push_back(pair(mid, currentError));
+        answers.push_back(pair(mid, currentError));
     }
 }
 
-void Equation::findBySuccessiveApprox(const vector& subintervals, double step, double error, pairVector* answers)
+void Equation::findBySuccessiveApprox(const vector& subintervals, double step, double error, pairVector& answers)
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -174,7 +174,7 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
 
         if (f(prevGuess) == 0)
         {
-            answers->push_back(pair(prevGuess, 0));
+            answers.push_back(pair(prevGuess, 0));
             continue;
         }
 
@@ -186,7 +186,7 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
             double currentError = std::abs((x - prevGuess) / x);
             if (currentError < error)
             {
-                answers->push_back(pair(x, currentError));
+                answers.push_back(pair(x, currentError));
                 break;
             }
 

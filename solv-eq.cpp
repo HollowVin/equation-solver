@@ -12,9 +12,8 @@ int main()
     std::cin >> equation;
     readSolveParameters(eval);
 
-    pairVector* answers = equation.solve(eval.method, eval.start, eval.end, eval.subdiv, eval.figs);
-    print_results(*answers, equation, eval);
-    delete answers;
+    pairVector answers = equation.solve(eval.method, eval.start, eval.end, eval.subdiv, eval.figs);
+    print_results(answers, equation, eval);
 
     return 0;
 }
