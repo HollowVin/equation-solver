@@ -5,6 +5,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 using vector = std::vector<double>;
 using pair = std::pair<double, double>;
@@ -22,8 +23,12 @@ class Equation
         vector findInitialSubintervals(double, double, int, pairVector&);
         void findByBisection(const vector&, double, double, pairVector&);
         void findBySuccessiveApprox(const vector&, double, double, pairVector&);
+        void findByNewtonRaphson(const vector&, double, double, pairVector&);
 
         static void swap(double&, double&);
+        static bool compare(pair, pair);
+        static void fillVector(pairVector&);
+        pairVector joinExponentAndCoefficientVectors();
 
     public:
         Equation();

@@ -30,23 +30,56 @@ double Equation::f(double x)
 
 double Equation::fprime(double x)
 {
-    vector terms;
-    double currentTerm = coefficients[0];
-    terms.push_back(currentTerm);
+    pairVector joinedVectors = joinExponentAndCoefficientVectors();
+    std::sort(joinedVectors.begin(), joinedVectors.end(), compare);
+    fillVector(joinedVectors);
     
-    for (int i = 1; i < coefficients.size() - 1; i++)
+    vector termsVector;
+    double currentTerm = joinedVectors[0].second;
+    termsVector.push_back(currentTerm);
+    
+    for (int i = 1; i < joinedVectors.size() - 1; i++)
     {
-        terms.push_back(terms[i - 1] * x + coefficients[i]);
+        termsVector.push_back(termsVector[i - 1] * x + joinedVectors[i].second);
     }
 
-    double derivative = terms[0];
+    double derivative = termsVector[0];
 
-    for (int i = 1; i < terms.size(); i++)
+    for (int i = 1; i < termsVector.size(); i++)
     {
-        derivative = derivative * x + terms[i];
+        derivative = derivative * x + termsVector[i];
     }
 
     return derivative;
+}
+
+bool Equation::compare(pair first, pair second)
+{
+    return first > second;
+}
+
+void Equation::fillVector(pairVector& vector)
+{
+    double largestExponent = vector[0].first;
+    for (int i = 1; i < largestExponent; i++)
+    {
+        if (vector[i].first != largestExponent - i)
+        {
+            vector.insert(vector.begin() + i, pair(largestExponent - i, 0));
+        }
+    }
+}
+
+pairVector Equation::joinExponentAndCoefficientVectors()
+{
+    pairVector joinedVector;
+    
+    for (int i = 0; i < terms; i++)
+    {
+        joinedVector.push_back(pair(exponents[i], coefficients[i]));
+    }
+
+    return joinedVector;
 }
 
 std::ostream& operator<<(std::ostream& out, const Equation& eq)
@@ -119,9 +152,9 @@ pairVector Equation::solve(Method m, double start, double end, int subdiv, int f
         case Method::approximation:
             findBySuccessiveApprox(subintervals, step, error, answers);
             break;
-        /*case Method::newton:
-            newtonRaphson();
-            break;*/
+        case Method::newton:
+            findByNewtonRaphson(subintervals, step, error, answers);
+            break;
     }
 
     return answers;
@@ -202,6 +235,38 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
         for (int j = 0;; j++)
         {
             double x = f(prevGuess) + prevGuess;
+            if (x < start || x > start + step || j > 20) { break; }
+
+            double currentError = std::abs((x - prevGuess) / x);
+            if (currentError < error)
+            {
+                answers.push_back(pair(x, currentError));
+                break;
+            }
+
+            prevGuess = x;
+            prevError = currentError;
+        }
+    }
+}
+
+void Equation::findByNewtonRaphson(const vector& subintervals, double step, double error, pairVector& answers)
+{
+    for (int i = 0; i < subintervals.size(); i++)
+    {
+        double start = subintervals[i];
+        double prevGuess = start + step / 2;
+        double prevError = 0;
+
+        if (f(prevGuess) == 0)
+        {
+            answers.push_back(pair(prevGuess, 0));
+            continue;
+        }
+
+        for (int j = 0;; j++)
+        {
+            double x = prevGuess - f(prevGuess) / fprime(prevGuess);
             if (x < start || x > start + step || j > 20) { break; }
 
             double currentError = std::abs((x - prevGuess) / x);
