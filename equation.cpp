@@ -28,6 +28,27 @@ double Equation::f(double x)
     return result;
 }
 
+double Equation::fprime(double x)
+{
+    vector terms;
+    double currentTerm = coefficients[0];
+    terms.push_back(currentTerm);
+    
+    for (int i = 1; i < coefficients.size() - 1; i++)
+    {
+        terms.push_back(terms[i - 1] * x + coefficients[i]);
+    }
+
+    double derivative = terms[0];
+
+    for (int i = 1; i < terms.size(); i++)
+    {
+        derivative = derivative * x + terms[i];
+    }
+
+    return derivative;
+}
+
 std::ostream& operator<<(std::ostream& out, const Equation& eq)
 {
     for (int i = 0; i < eq.terms; i++)

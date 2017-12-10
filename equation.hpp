@@ -36,5 +36,6 @@ class Equation
         vector getCoefficients();
 
         double f(double);
+        double fprime(double);
         pairVector solve(Method, double, double, int, int);
 };
