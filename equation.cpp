@@ -11,6 +11,7 @@ Equation::Equation(vector exp, vector coeff):
     int expSize = exp.size();
     int coeffSize = coeff.size();
     terms = expSize < coeffSize ? expSize : coeffSize;
+    clearZeroCoefficients();
 }
 
 vector Equation::getExponents() { return exponents; }
@@ -70,7 +71,7 @@ void Equation::fillVector(pairVector& vector)
     }
 }
 
-pairVector Equation::joinExponentAndCoefficientVectors()
+pairVector Equation::joinExponentAndCoefficientVectors() const
 {
     pairVector joinedVector;
     
@@ -125,13 +126,15 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     std::getline(in, str);
     iss.str(str);
     while (iss >> n) 
-    { 
+    {
+        
         eq.coefficients.push_back(n);
         size2++; 
     }
     iss.clear();
 
     eq.terms = size1 <= size2 ? size1 : size2;
+    eq.clearZeroCoefficients();
     return in;
 }
 
@@ -278,6 +281,69 @@ void Equation::findByNewtonRaphson(const vector& subintervals, double step, doub
 
             prevGuess = x;
             prevError = currentError;
+        }
+    }
+}
+
+std::string Equation::possibleSolutions() const
+{
+    pairVector joinedVectors = joinExponentAndCoefficientVectors();
+    std::sort(joinedVectors.begin(), joinedVectors.end(), compare);
+
+    bool isPositive1 = joinedVectors[0].second > 0;
+    bool isPositive2 = fmod(joinedVectors[0].first, 2) == 0 || joinedVectors[0].second > 0;
+
+    int maxPossiblePositives = 0;
+    int maxPossibleNegatives = 0;
+    int maxPossibleImaginary = fmod(joinedVectors[0].first, 2) == 0 ? joinedVectors[0].first : joinedVectors[0].first - 1;
+    int maxPossibleSolutions = joinedVectors[0].first;
+
+    for (int i = 1; i < terms; i++)
+    {
+        if ((isPositive1 && joinedVectors[i].second < 0) || (!isPositive1 && joinedVectors[i].second < 0))
+        {
+            maxPossiblePositives += 1;
+            isPositive1 = !isPositive1;
+        }
+
+        if ((isPositive2 && (fmod(joinedVectors[i].first, 2) != 0 || joinedVectors[i].second < 0))
+            || (!isPositive2 && !(fmod(joinedVectors[i].first, 2) != 0 || joinedVectors[i].second < 0)))
+        {
+            maxPossibleNegatives += 1;
+            isPositive2 = !isPositive2;
+        }
+    }
+
+    std::stringstream solutions;
+    solutions << "Posibilidades:\n";
+
+    for (int i = maxPossiblePositives; i >= 0; i -= 2)
+    {
+        for (int j = maxPossibleNegatives; j >= 0; j -= 2)
+        {
+            for (int k = maxPossibleImaginary; k >= 0; j -= 2)
+            {
+                if (maxPossibleSolutions == i + j + k)
+                {
+                    solutions << "* Positivas: " << i << " | Negativas: " << j << " | Imaginarias: " << k << "\n";
+                }
+            }
+        }
+    }
+
+    return solutions.str();
+}
+
+void Equation::clearZeroCoefficients()
+{
+    for (int i = 0; i < terms; i++)
+    {
+        if (coefficients[i] == 0)
+        {
+            coefficients.erase(coefficients.begin() + i);
+            exponents.erase(exponents.begin() + i);
+            terms -= 1;
+            i -= 1;
         }
     }
 }

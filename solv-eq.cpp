@@ -62,6 +62,8 @@ void print_results(const pairVector& answers, const Equation& equation, const Eq
     std::cout << "Cifras significativas confiables: " << eval.figs << std::endl;
     std::cout << "Error aceptable: " << max_rel_error * 100 << "%";
     std::cout << std::endl << std::endl;
+    std::cout << equation.possibleSolutions();
+    std::cout << std::endl;
     print_answers(answers);
 }
 

@@ -28,7 +28,8 @@ class Equation
         static void swap(double&, double&);
         static bool compare(pair, pair);
         static void fillVector(pairVector&);
-        pairVector joinExponentAndCoefficientVectors();
+        pairVector joinExponentAndCoefficientVectors() const;
+        void clearZeroCoefficients();
 
     public:
         Equation();
@@ -43,4 +44,5 @@ class Equation
         double f(double);
         double fprime(double);
         pairVector solve(Method, double, double, int, int);
+        std::string possibleSolutions() const;
 };
