@@ -300,7 +300,7 @@ std::string Equation::possibleSolutions() const
 
     for (int i = 1; i < terms; i++)
     {
-        if ((isPositive1 && joinedVectors[i].second < 0) || (!isPositive1 && joinedVectors[i].second < 0))
+        if ((isPositive1 && joinedVectors[i].second < 0) || (!isPositive1 && joinedVectors[i].second > 0))
         {
             maxPossiblePositives += 1;
             isPositive1 = !isPositive1;
@@ -314,14 +314,16 @@ std::string Equation::possibleSolutions() const
         }
     }
 
+    std::cout << maxPossibleSolutions << " " << maxPossiblePositives << " " << maxPossibleNegatives << " " << maxPossibleImaginary << std::endl;
+
     std::stringstream solutions;
-    solutions << "Posibilidades:\n";
+    solutions << "Posibilidades de soluciones:\n";
 
     for (int i = maxPossiblePositives; i >= 0; i -= 2)
     {
         for (int j = maxPossibleNegatives; j >= 0; j -= 2)
         {
-            for (int k = maxPossibleImaginary; k >= 0; j -= 2)
+            for (int k = maxPossibleImaginary; k >= 0; k -= 2)
             {
                 if (maxPossibleSolutions == i + j + k)
                 {
