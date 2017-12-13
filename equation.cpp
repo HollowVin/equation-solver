@@ -306,8 +306,8 @@ std::string Equation::possibleSolutions() const
             isPositive1 = !isPositive1;
         }
 
-        if ((isPositive2 && (fmod(joinedVectors[i].first, 2) != 0 || joinedVectors[i].second < 0))
-            || (!isPositive2 && !(fmod(joinedVectors[i].first, 2) != 0 || joinedVectors[i].second < 0)))
+        if ((isPositive2 && (fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second > 0))
+            || (!isPositive2 && !(fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second < 0)))
         {
             maxPossibleNegatives += 1;
             isPositive2 = !isPositive2;
