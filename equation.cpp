@@ -227,7 +227,6 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
     {
         double start = subintervals[i];
         double prevGuess = start + step / 2;
-        double prevError = 0;
 
         if (f(prevGuess) == 0)
         {
@@ -248,7 +247,6 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
             }
 
             prevGuess = x;
-            prevError = currentError;
         }
     }
 }
@@ -259,7 +257,6 @@ void Equation::findByNewtonRaphson(const vector& subintervals, double step, doub
     {
         double start = subintervals[i];
         double prevGuess = start + step / 2;
-        double prevError = 0;
 
         if (f(prevGuess) == 0)
         {
@@ -280,7 +277,6 @@ void Equation::findByNewtonRaphson(const vector& subintervals, double step, doub
             }
 
             prevGuess = x;
-            prevError = currentError;
         }
     }
 }
@@ -291,7 +287,8 @@ std::string Equation::possibleSolutions() const
     std::sort(joinedVectors.begin(), joinedVectors.end(), compare);
 
     bool isPositive1 = joinedVectors[0].second > 0;
-    bool isPositive2 = fmod(joinedVectors[0].first, 2) == 0 || joinedVectors[0].second > 0;
+    bool isPositive2 = (fmod(joinedVectors[0].first, 2) == 0 && joinedVectors[0].second > 0) 
+        || (fmod(joinedVectors[0].first, 2) != 0 && joinedVectors[0].second < 0);
 
     int maxPossiblePositives = 0;
     int maxPossibleNegatives = 0;
@@ -306,8 +303,10 @@ std::string Equation::possibleSolutions() const
             isPositive1 = !isPositive1;
         }
 
-        if ((isPositive2 && (fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second > 0))
-            || (!isPositive2 && !(fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second < 0)))
+        if ((isPositive2 && ((fmod(joinedVectors[i].first, 2) == 0 && joinedVectors[i].second < 0) 
+                || (fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second > 0)))
+            || (!isPositive2 && ((fmod(joinedVectors[i].first, 2) == 0 && joinedVectors[i].second > 0) 
+                || (fmod(joinedVectors[i].first, 2) != 0 && joinedVectors[i].second < 0))))
         {
             maxPossibleNegatives += 1;
             isPositive2 = !isPositive2;
