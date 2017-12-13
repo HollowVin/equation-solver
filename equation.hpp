@@ -20,10 +20,10 @@ class Equation
         vector coefficients;
         int terms;
         
-        vector findInitialSubintervals(double, double, int, pairVector&);
-        void findByBisection(const vector&, double, double, pairVector&);
-        void findBySuccessiveApprox(const vector&, double, double, pairVector&);
-        void findByNewtonRaphson(const vector&, double, double, pairVector&);
+        vector findInitialSubintervals(double, double, int, pairVector&) const;
+        void findByBisection(const vector&, double, double, pairVector&) const;
+        void findBySuccessiveApprox(const vector&, double, double, pairVector&) const;
+        void findByNewtonRaphson(const vector&, double, double, pairVector&) const;
 
         static void swap(double&, double&);
         static bool compare(pair, pair);
@@ -38,11 +38,11 @@ class Equation
         friend std::ostream& operator<<(std::ostream&, const Equation&);
         friend std::istream& operator>>(std::istream&, Equation&);
 
-        vector getExponents();
-        vector getCoefficients();
+        vector getExponents() const;
+        vector getCoefficients() const;
 
-        double f(double);
-        double fprime(double);
-        pairVector solve(Method, double, double, int, int);
+        double f(double) const;
+        double fprime(double) const;
+        pairVector solve(Method, double, double, int, int) const;
         std::string possibleSolutions() const;
 };

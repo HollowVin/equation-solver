@@ -14,10 +14,10 @@ Equation::Equation(vector exp, vector coeff):
     clearZeroCoefficients();
 }
 
-vector Equation::getExponents() { return exponents; }
-vector Equation::getCoefficients() { return coefficients; }
+vector Equation::getExponents() const { return exponents; }
+vector Equation::getCoefficients() const { return coefficients; }
 
-double Equation::f(double x)
+double Equation::f(double x) const
 {
     double result = 0;
     
@@ -29,7 +29,7 @@ double Equation::f(double x)
     return result;
 }
 
-double Equation::fprime(double x)
+double Equation::fprime(double x) const
 {
     pairVector joinedVectors = joinExponentAndCoefficientVectors();
     std::sort(joinedVectors.begin(), joinedVectors.end(), compare);
@@ -138,7 +138,7 @@ std::istream& operator>>(std::istream& in, Equation& eq)
     return in;
 }
 
-pairVector Equation::solve(Method m, double start, double end, int subdiv, int figs)
+pairVector Equation::solve(Method m, double start, double end, int subdiv, int figs) const
 {
     if (start > end) { swap(start, end); }
 
@@ -170,7 +170,7 @@ void Equation::swap(double& a, double& b)
     b = temp;
 }
 
-vector Equation::findInitialSubintervals(double start, double step, int subdiv, pairVector& answers)
+vector Equation::findInitialSubintervals(double start, double step, int subdiv, pairVector& answers) const
 {
     vector subintervals;
     double end = start + step;
@@ -189,7 +189,7 @@ vector Equation::findInitialSubintervals(double start, double step, int subdiv, 
     return subintervals;
 }
 
-void Equation::findByBisection(const vector& subintervals, double step, double error, pairVector& answers)
+void Equation::findByBisection(const vector& subintervals, double step, double error, pairVector& answers) const
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -221,7 +221,7 @@ void Equation::findByBisection(const vector& subintervals, double step, double e
     }
 }
 
-void Equation::findBySuccessiveApprox(const vector& subintervals, double step, double error, pairVector& answers)
+void Equation::findBySuccessiveApprox(const vector& subintervals, double step, double error, pairVector& answers) const
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
@@ -251,7 +251,7 @@ void Equation::findBySuccessiveApprox(const vector& subintervals, double step, d
     }
 }
 
-void Equation::findByNewtonRaphson(const vector& subintervals, double step, double error, pairVector& answers)
+void Equation::findByNewtonRaphson(const vector& subintervals, double step, double error, pairVector& answers) const
 {
     for (int i = 0; i < subintervals.size(); i++)
     {
