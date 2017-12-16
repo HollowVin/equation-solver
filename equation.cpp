@@ -62,9 +62,9 @@ bool Equation::compare(pair first, pair second)
 void Equation::fillVector(pairVector& vector)
 {
     double largestExponent = vector[0].first;
-    for (int i = 1; i < largestExponent; i++)
+    for (int i = 1; i <= largestExponent; i++)
     {
-        if (vector[i].first != largestExponent - i)
+        if (vector[i].first != largestExponent - i || i > vector.size() - 1)
         {
             vector.insert(vector.begin() + i, pair(largestExponent - i, 0));
         }
@@ -266,7 +266,9 @@ void Equation::findByNewtonRaphson(const vector& subintervals, double step, doub
 
         for (int j = 0;; j++)
         {
+            std::cout << "Testing: " << prevGuess << std::endl;
             double x = prevGuess - f(prevGuess) / fprime(prevGuess);
+            std::cout << fprime(prevGuess) << std::endl;
             if (x < start || x > start + step || j > 20) { break; }
 
             double currentError = std::abs((x - prevGuess) / x);
@@ -294,6 +296,7 @@ std::string Equation::possibleSolutions() const
     int maxPossibleNegatives = 0;
     int maxPossibleImaginary = fmod(joinedVectors[0].first, 2) == 0 ? joinedVectors[0].first : joinedVectors[0].first - 1;
     int maxPossibleSolutions = joinedVectors[0].first;
+    int maxPossibleZeroes = 1;
 
     for (int i = 1; i < terms; i++)
     {
@@ -312,9 +315,7 @@ std::string Equation::possibleSolutions() const
             isPositive2 = !isPositive2;
         }
     }
-
-    std::cout << maxPossibleSolutions << " " << maxPossiblePositives << " " << maxPossibleNegatives << " " << maxPossibleImaginary << std::endl;
-
+    
     std::stringstream solutions;
     solutions << "Posibilidades de soluciones:\n";
 
@@ -324,9 +325,12 @@ std::string Equation::possibleSolutions() const
         {
             for (int k = maxPossibleImaginary; k >= 0; k -= 2)
             {
-                if (maxPossibleSolutions == i + j + k)
+                for (int m = maxPossibleZeroes; m >= 0; m--)
                 {
-                    solutions << "* Positivas: " << i << " | Negativas: " << j << " | Imaginarias: " << k << "\n";
+                    if (maxPossibleSolutions == i + j + k + m)
+                    {
+                        solutions << "* Positivas: " << i << " | Negativas: " << j << " | Cero: " << m << " | Imaginarias: " << k << "\n";
+                    }
                 }
             }
         }
