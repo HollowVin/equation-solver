@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/solv-eq",
+            "program": "${workspaceFolder}/bin/solv-eq",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
