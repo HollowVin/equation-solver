@@ -17,3 +17,6 @@ solv-eq.o: $(SRCS)solv-eq.cpp
 
 clean: 
 	rm -f $(OBJS)*.o $(BINS)solv-eq
+
+$(shell mkdir -p $(BINS))
+$(shell mkdir -p $(OBJS))

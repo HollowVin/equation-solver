@@ -1,3 +1,2 @@
-solv-eq
-socket/
-*.o
+/bin
+/obj
