@@ -1,16 +1,19 @@
 CC = g++
 CCFLAGS = -c
+SRCS = src/
+OBJS = obj/
+BINS = bin/
 
 solv-eq: equation.o solv-eq.o 
-	$(CC) equation.o solv-eq.o -o solv-eq
+	$(CC) $(OBJS)equation.o $(OBJS)solv-eq.o -o $(BINS)solv-eq
 
-equation.o: equation.cpp 
-	$(CC) equation.cpp -o equation.o $(CCFLAGS)
+equation.o: $(SRCS)equation.cpp 
+	$(CC) $(SRCS)equation.cpp -o $(OBJS)equation.o $(CCFLAGS)
 
-solv-eq.o: solv-eq.cpp 
-	$(CC) solv-eq.cpp -o solv-eq.o $(CCFLAGS)
+solv-eq.o: $(SRCS)solv-eq.cpp 
+	$(CC) $(SRCS)solv-eq.cpp -o $(OBJS)solv-eq.o $(CCFLAGS)
 
 .PHONY: clean
 
 clean: 
-	rm *.o solv-eq
+	rm -f $(OBJS)*.o $(BINS)solv-eq
